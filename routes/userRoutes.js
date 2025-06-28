@@ -7,6 +7,12 @@ router.post('/signup', async (req, res) =>{
     try{
         const data = req.body
         const newUser = new User(data);
+        if(newUser.role === 'admin'){
+            const roleClash = User.findOne({role:'admin'})
+            if(roleClash){
+                return res.status(401).json({error: 'Admin already exist'});
+            }
+        }
         const response = await newUser.save();
         console.log('data saved');
 
